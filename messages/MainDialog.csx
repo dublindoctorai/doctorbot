@@ -1,5 +1,4 @@
 #r "Newtonsoft.Json"
-#r "DocJson.json"
 #load "BasicForm.csx"
 #load "StopwordTool.csx"
 
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
-
+using Newtonsoft.Json;
 
 /// This dialog is the main bot dialog, which will call the Form Dialog and handle the results
 [Serializable]
