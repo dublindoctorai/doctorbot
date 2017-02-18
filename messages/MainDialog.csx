@@ -1,3 +1,5 @@
+#r "Newtonsoft.Json"
+#r "DocJson.json"
 #load "BasicForm.csx"
 #load "StopwordTool.csx"
 
