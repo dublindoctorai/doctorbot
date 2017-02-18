@@ -13,7 +13,6 @@ using Microsoft.Bot.Connector;
 public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
 {
     log.Info($"Webhook was triggered!");
-
     // Initialize the azure bot
     using (BotService.Initialize())
     {
@@ -64,6 +63,7 @@ public static async Task<object> Run(HttpRequestMessage req, TraceWriter log)
                     break;
             }
         }
+        
         return req.CreateResponse(HttpStatusCode.Accepted);
     }    
 }
