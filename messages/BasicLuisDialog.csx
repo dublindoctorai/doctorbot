@@ -47,19 +47,48 @@ public class BasicLuisDialog : LuisDialog<object>
         var output_symptoms = String.Join(", ", symptoms);
         var output_lengths = String.Join(", ", lengths);
         
-        await context.PostAsync($"You are high priority, go to the hospital now. Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
+        await context.PostAsync($"You are high priority, go to the hospital now."); //
+        await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
         context.Wait(MessageReceived);
     }
     [LuisIntent("Medium priority")]
     public async Task Mp(IDialogContext context, LuisResult result)
     {
-        await context.PostAsync($"You are medium priority, go to the hospital when ready. Your symptoms are: {result.Entities} and you have had them for {result}"); //
+        var symptoms = new List<string>();
+        var lengths = new List<string>();
+        foreach (var entity in result.Entities)
+        {
+            if (entity.Type=="Symptom") {
+                symptoms.Add(entity.Entity);
+            } else if (entity.Type=="how long") {
+                lengths.Add(entity.Entity);
+            }
+        }
+        var output_symptoms = String.Join(", ", symptoms);
+        var output_lengths = String.Join(", ", lengths);
+        
+        await context.PostAsync($"You are medium priority, go to the hospital when ready."); //
+        await context.PostAsync($"Your symptoms are: {output_symptoms} and you have had them for {output_lengths}"); //
         context.Wait(MessageReceived);
     }
     [LuisIntent("Low priority")]
     public async Task Lp(IDialogContext context, LuisResult result)
     {
-        await context.PostAsync($"You may be able to get treated at a pharmacy. You said: {result.Entities}"); //
+        var symptoms = new List<string>();
+        var lengths = new List<string>();
+        foreach (var entity in result.Entities)
+        {
+            if (entity.Type=="Symptom") {
+                symptoms.Add(entity.Entity);
+            } else if (entity.Type=="how long") {
+                lengths.Add(entity.Entity);
+            }
+        }
+        var output_symptoms = String.Join(", ", symptoms);
+        var output_lengths = String.Join(", ", lengths);
+        
+        await context.PostAsync($"You may be able to get treated at a pharmacy."); //
+        await context.PostAsync($"Your symptoms are: {output_symptoms} and you have had them for {output_lengths}"); //
         context.Wait(MessageReceived);
     }
 }
