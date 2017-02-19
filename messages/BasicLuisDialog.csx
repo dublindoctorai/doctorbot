@@ -1,3 +1,5 @@
+#load "StopwordTool.csx"
+
 using System;
 using System.Threading.Tasks;
 
@@ -25,7 +27,7 @@ public class BasicLuisDialog : LuisDialog<object>
     [LuisIntent("Hello")]
     public async Task HelloIntent(IDialogContext context, LuisResult result)
     {
-        await context.PostAsync($"Hello, are you sick? What are your symptoms?"); //
+        await context.PostAsync($"Are you sick? What are your symptoms?"); //
         context.Wait(MessageReceived);
     }
     [LuisIntent("Death")]
@@ -53,7 +55,7 @@ public class BasicLuisDialog : LuisDialog<object>
                 lengths.Add(entity.Entity);
             }
         }
-        var output_symptoms = String.Join(", ", symptoms);
+        string output_symptoms = String.Join(", ", symptoms);
         var output_lengths = String.Join(", ", lengths);
         if (symptoms.Count==0) {
             await context.PostAsync($"You may be high priority, but I didn't understand your symptoms properly."); //
@@ -62,9 +64,11 @@ public class BasicLuisDialog : LuisDialog<object>
             if (lengths.Count==0) {
                 await context.PostAsync($"You are high priority, go to the hospital now."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
+                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
             }  else {
                 await context.PostAsync($"You are high priority, go to the hospital now."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
+                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
             }
         }
 
@@ -83,7 +87,7 @@ public class BasicLuisDialog : LuisDialog<object>
                 lengths.Add(entity.Entity);
             }
         }
-        var output_symptoms = String.Join(", ", symptoms);
+        string output_symptoms = String.Join(", ", symptoms);
         var output_lengths = String.Join(", ", lengths);
         if (symptoms.Count==0) {
             await context.PostAsync($"You may be medium priority, but I didn't understand your symptoms properly."); //
@@ -92,9 +96,11 @@ public class BasicLuisDialog : LuisDialog<object>
             if (lengths.Count==0) {
                 await context.PostAsync($"You are medium priority, go to the hospital when ready."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
+                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
             }  else {
                 await context.PostAsync($"You are medium priority, go to the hospital when ready."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
+                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
             }
         }
        
@@ -113,7 +119,7 @@ public class BasicLuisDialog : LuisDialog<object>
                 lengths.Add(entity.Entity);
             }
         }
-        var output_symptoms = String.Join(", ", symptoms);
+        string output_symptoms = String.Join(", ", symptoms);
         var output_lengths = String.Join(", ", lengths);
         if (symptoms.Count==0) {
             await context.PostAsync($"You may be able to get treated at a pharmacy, but I didn't understand your symptoms properly."); //
@@ -122,12 +128,66 @@ public class BasicLuisDialog : LuisDialog<object>
             if (lengths.Count==0) {
                 await context.PostAsync($"You may be able to get treated at a pharmacy."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
+                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
             }  else {
                 await context.PostAsync($"You may be able to get treated at a pharmacy."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
+                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
             }
         }
         
         context.Wait(MessageReceived);
     }
+    
+        public string getProbableCondition(string symptoms){
+        Dictionary<string, List<string>> conditionLists = new Dictionary<string, List<string>>
+        {
+            {"sore", new List<string> {"cold","flu"}},
+            {"blocked", new List<string> {"cold","flu"}},
+            {"sneezing", new List<string> {"cold","allergies"}},
+            {"cough", new List<string> {"cold","flu","asthma","infection","bronchitis","allergies"}},
+            {"hoarse", new List<string> {"cold","allergies","smoking"}},
+            {"weak", new List<string> {"cold"}},
+            {"fever", new List<string> {"chicken pox","flu","Heat stroke"}},
+            {"appetite", new List<string> {"chicken pox"}},
+            {"headache", new List<string> {"chicken pox","flu","migraine","stress","alcohol","lack of sleep","tension headache","acute sinusitis","caffeine withdrawl"}},
+            {"rash", new List<string> {"chicken pox"}},
+            {"aching", new List<string> {"flu","angina"}},
+            {"tiredness", new List<string> {"flu","angina"}},
+            {"vomiting ", new List<string> {"flu","concussion","ingestion of toxins","alcohol"}},
+            {"diarrhoea", new List<string> {"flu","virus","parasite","irritable bowel syndrome"}},
+            {"chest", new List<string> {"angina","heart attack","heartburn","costochondritis","panic attack","anxiety"}},
+            {"nausea", new List<string> {"angina","flu","food poisoning","inner-ear disease"}},
+            {"breathless", new List<string> {"angina","asthma","bronchitis","pneumonia","arousal"}},
+            {"sweating", new List<string> {"angina","diabetes","anxiety","malaria","Tuberculosis"}},
+            {"dizzy", new List<string> {"angina","low iron levels","low suger levels","anxiety","dehydration"}},
+            {"exhausted", new List<string> {"AI Hackathon"}},
+            {"itchy", new List<string> {"piles","parasite","herpes"}},
+            {"bleeding", new List<string> {"trauma"}},
+            {"blackout", new List<string> {"medication reaction","short-acting sedative","epilepsy","intoxication","transient global amnesia"}},
+            {"bruised", new List<string> {"bruise","hematoma","trauma","botox injection","thrombocytopenia"}},
+            {"delusions", new List<string> {"alcohol withdrwal","cocain abuse","medical reaction"}}
+
+        };
+        
+        string strippedSymptoms = StopwordTool.RemoveStopwords(symptoms);
+        List<string> probabilityList = new List<string>();
+        string[] splitSymptoms = strippedSymptoms.Split(' ');
+        
+        for(int i = 0;i<splitSymptoms.Length;i++){
+            if (conditionLists.ContainsKey(splitSymptoms[i]))
+            {
+            foreach (string str in conditionLists[splitSymptoms[i]])
+                {
+                    if (!probabilityList.Contains(str))
+                        probabilityList.Add(str);
+                }
+               //probabilityList.AddRange(conditionLists[splitSymptoms[i]]);
+            }
+        }
+        
+        string conditions = string.Join(", ", probabilityList.ToArray());
+        return conditions;
+    }
+    
 }
