@@ -64,11 +64,15 @@ public class BasicLuisDialog : LuisDialog<object>
             if (lengths.Count==0) {
                 await context.PostAsync($"You are high priority, go to the hospital now."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
-                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                if(getProbableCondition(output_symptoms)!= ""){
+                    await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                }
             }  else {
                 await context.PostAsync($"You are high priority, go to the hospital now."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
-                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                if(getProbableCondition(output_symptoms)!= ""){
+                    await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                }
             }
         }
 
@@ -96,11 +100,15 @@ public class BasicLuisDialog : LuisDialog<object>
             if (lengths.Count==0) {
                 await context.PostAsync($"You are medium priority, go to the hospital when ready."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
-                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                if(getProbableCondition(output_symptoms)!= ""){
+                    await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                }
             }  else {
                 await context.PostAsync($"You are medium priority, go to the hospital when ready."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
-                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                if(getProbableCondition(output_symptoms)!= ""){
+                    await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                }
             }
         }
        
@@ -128,11 +136,15 @@ public class BasicLuisDialog : LuisDialog<object>
             if (lengths.Count==0) {
                 await context.PostAsync($"You may be able to get treated at a pharmacy."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
-                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                if(getProbableCondition(output_symptoms)!= ""){
+                    await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                }
             }  else {
                 await context.PostAsync($"You may be able to get treated at a pharmacy."); //
                 await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
-                await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                if(getProbableCondition(output_symptoms)!= ""){
+                    await context.PostAsync($"It is possible you have one of the following conditions: {getProbableCondition(output_symptoms)}");
+                }
             }
         }
         
