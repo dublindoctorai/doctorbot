@@ -18,7 +18,8 @@ public class BasicLuisDialog : LuisDialog<object>
     [LuisIntent("None")]
     public async Task NoneIntent(IDialogContext context, LuisResult result)
     {
-        await context.PostAsync($"You have reached the none intent. You said: {result.Query}"); //
+        await context.PostAsync($"I didn't understand that. You said: {result.Query}"); //
+        await context.PostAsync($"Please tell me your symptoms and how long you have had them"); //
         context.Wait(MessageReceived);
     }
     [LuisIntent("Hello")]
