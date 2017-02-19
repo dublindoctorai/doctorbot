@@ -28,6 +28,14 @@ public class BasicLuisDialog : LuisDialog<object>
         await context.PostAsync($"Hello, are you sick? What are your symptoms?"); //
         context.Wait(MessageReceived);
     }
+    [LuisIntent("Death")]
+    public async Task DeathIntent(IDialogContext context, LuisResult result)
+    {
+        await context.PostAsync($"Don't worry, you won't die, you're going to be fine."); //
+        await context.PostAsync($"Please tell me your symptoms and how long you have had them"); //
+        context.Wait(MessageReceived);
+    }
+
 
 
     // Go to https://luis.ai and create a new intent, then train/publish your luis app.
