@@ -47,9 +47,19 @@ public class BasicLuisDialog : LuisDialog<object>
         }
         var output_symptoms = String.Join(", ", symptoms);
         var output_lengths = String.Join(", ", lengths);
-        
-        await context.PostAsync($"You are high priority, go to the hospital now."); //
-        await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
+        if (symptoms.Count==0) {
+            await context.PostAsync($"You may be high priority, but I didn't understand your symptoms properly."); //
+            await context.PostAsync($"Please tell me your symptoms and how long you have had them"); //
+        } else {
+            if (lengths.Count==0) {
+                await context.PostAsync($"You are high priority, go to the hospital now."); //
+                await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
+            }  else {
+                await context.PostAsync($"You are high priority, go to the hospital now."); //
+                await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
+            }
+        }
+
         context.Wait(MessageReceived);
     }
     [LuisIntent("Medium priority")]
@@ -67,9 +77,19 @@ public class BasicLuisDialog : LuisDialog<object>
         }
         var output_symptoms = String.Join(", ", symptoms);
         var output_lengths = String.Join(", ", lengths);
-        
-        await context.PostAsync($"You are medium priority, go to the hospital when ready."); //
-        await context.PostAsync($"Your symptoms are: {output_symptoms} and you have had them for {output_lengths}"); //
+        if (symptoms.Count==0) {
+            await context.PostAsync($"You may be medium priority, but I didn't understand your symptoms properly."); //
+            await context.PostAsync($"Please tell me your symptoms and how long you have had them"); //
+        } else {
+            if (lengths.Count==0) {
+                await context.PostAsync($"You are medium priority, go to the hospital when ready."); //
+                await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
+            }  else {
+                await context.PostAsync($"You are medium priority, go to the hospital when ready."); //
+                await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
+            }
+        }
+       
         context.Wait(MessageReceived);
     }
     [LuisIntent("Low priority")]
@@ -87,6 +107,18 @@ public class BasicLuisDialog : LuisDialog<object>
         }
         var output_symptoms = String.Join(", ", symptoms);
         var output_lengths = String.Join(", ", lengths);
+        if (symptoms.Count==0) {
+            await context.PostAsync($"You may be able to get treated at a pharmacy, but I didn't understand your symptoms properly."); //
+            await context.PostAsync($"Please tell me your symptoms and how long you have had them"); //
+        } else {
+            if (lengths.Count==0) {
+                await context.PostAsync($"You may be able to get treated at a pharmacy."); //
+                await context.PostAsync($"Your symptoms are : {output_symptoms}."); //
+            }  else {
+                await context.PostAsync($"You may be able to get treated at a pharmacy."); //
+                await context.PostAsync($"Your symptoms are : {output_symptoms} and you have had them for {output_lengths}"); //
+            }
+        }
         
         await context.PostAsync($"You may be able to get treated at a pharmacy."); //
         await context.PostAsync($"Your symptoms are: {output_symptoms} and you have had them for {output_lengths}"); //
