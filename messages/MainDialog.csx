@@ -12,7 +12,19 @@ using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 
-/// This dialog is the main bot dialog, which will call the Form Dialog and handle the results
+public class Symptom
+{
+    public string type { get; set; }
+}
+
+public class Condition
+{
+    public string descriptor {get; set;}
+    public string duration { get; set; }
+    public string priority { get; set; }
+    public List<Symptom> symptoms { get; set; }
+}
+
 [Serializable]
 public class MainDialog : IDialog<BasicForm>
 {
@@ -39,9 +51,11 @@ public class MainDialog : IDialog<BasicForm>
             var form = await result;
             if (form != null)
             {
+             //   Condition condition = JsonConvert.DeserializeObject<Condition>(File.ReadAllText(@"Sexyfrombot\DocJson.json"));
                 await context.PostAsync("Thanks for completing the form! Just type anything to restart it.");
                 form.Symptoms = StopwordTool.RemoveStopwords(form.Symptoms);
                 await context.PostAsync($"{form.Symptoms}");
+            //    await context.PostAsync($"{condition.descriptor}");
             }
             else
             {
