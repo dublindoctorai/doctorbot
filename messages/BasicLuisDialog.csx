@@ -120,8 +120,6 @@ public class BasicLuisDialog : LuisDialog<object>
             }
         }
         
-        await context.PostAsync($"You may be able to get treated at a pharmacy."); //
-        await context.PostAsync($"Your symptoms are: {output_symptoms} and you have had them for {output_lengths}"); //
         context.Wait(MessageReceived);
     }
 }
